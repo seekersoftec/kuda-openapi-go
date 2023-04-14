@@ -11,7 +11,7 @@ To use this package, you need to have Go installed on your computer.
 
 ```bash
     go get github.com/go-faker/faker/v4
-    go get github.com/seekersoftec/kuda-openapi-go/kuda
+    go get github.com/seekersoftec/kuda-openapi-go
 ```
 
 3. Navigate to the cloned directory and run the main.go file.
