@@ -1,6 +1,6 @@
 # Kuda OpenAPI
 
-This package contains a Go program that uses the go-faker and kuda-openapi-go packages to create personas, virtual accounts and perform single fund transfers using the Kuda bank API.
+This package contains a Go package for interacting with the Kuda bank API.
 
 ## Installation
 
@@ -10,11 +10,10 @@ To use this package, you need to have Go installed on your computer.
 2. Install the dependencies:
 
 ```bash
-    go get github.com/go-faker/faker/v4
     go get github.com/seekersoftec/kuda-openapi-go
 ```
 
-3. Navigate to the cloned directory and run the main.go file.
+3. Navigate to the examples directory and run the main.go file.
 
 ## Usage
 
