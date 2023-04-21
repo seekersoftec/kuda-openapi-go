@@ -1,4 +1,4 @@
-# Kuda OpenAPI
+# Kuda Bank OpenAPI
 
 This package contains a Go package for interacting with the Kuda bank API.
 
