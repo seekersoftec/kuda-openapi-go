@@ -291,3 +291,19 @@ func (k *KudaBankAPI) WithdrawVirtualAccount(trackingRef string, amount int, nar
 
 	return k.MakeRequest(WITHDRAW_VIRTUAL_ACCOUNT, payload, "")
 }
+
+func (k *KudaBankAPI) TransactionStatusQuery(isThirdPartyBankTransfer bool, transactionRequestReference string) (JsonType, error) {
+	/*
+			This requests retrieves the status of a transaction.
+		    Args:
+		        isThirdPartyBankTransfer (bool): Unique Identifier for virtual Account
+		        transactionRequestReference (string): Transaction request reference. Defaults to "".
+	*/
+
+	payload := JsonType{
+		"isThirdPartyBankTransfer":    isThirdPartyBankTransfer,
+		"transactionRequestReference": transactionRequestReference,
+	}
+
+	return k.MakeRequest(TRANSACTION_STATUS_QUERY, payload, "")
+}

@@ -476,3 +476,7 @@ func TestWithdrawVirtualAccount(t *testing.T) {
 	// }
 
 }
+
+// govulncheck ./...
+// TransactionStatusQuery()
+// response, err := api.TransactionStatusQuery(request.IsThirdPartyBankTransfer, request.TransactionRequestReference)

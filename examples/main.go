@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 
@@ -73,7 +74,7 @@ func main() {
 
 	k, err := kuda.NewKudaBankAPI(connectionParams)
 	if err != nil {
-		log.Fatalf("Errof: %s ", err)
+		log.Fatalf("Errorf: %s ", err)
 	}
 
 	// Get token
@@ -115,7 +116,8 @@ func main() {
 		fmt.Println(fdata)
 
 		// Create a Virtual Accounts
-		data, err := k.CreateVirtualAccount(fdata.FirstName, fdata.LastName, fdata.MiddleName, fdata.Email, fdata.PhoneNumber, fdata.BusinessName, k.GetRef(10))
+		trackingRef := strconv.Itoa(k.GetRef(10))
+		data, err := k.CreateVirtualAccount(fdata.FirstName, fdata.LastName, fdata.MiddleName, fdata.Email, fdata.PhoneNumber, fdata.BusinessName, trackingRef)
 		if err != nil {
 			log.Fatalf("Errof: %s ", err)
 		}
@@ -148,7 +150,7 @@ func main() {
 	beneficiaryBankCode := "999057"
 	beneficiaryName := user2.FirstName + " " + user2.LastName
 	amount := 500
-	senderName := "Ojietohamen Samuel"
+	senderName := "John Doe"
 	narration := "Test transfer"
 	ClientAccountNumber := "2012017027"
 	// ClientAccountNumber, err := strconv.Atoi("2012017027") // 3000662179, 2012017027, user1.AccountNumber
