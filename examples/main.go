@@ -65,7 +65,7 @@ func generateFakeData() (FakeData, error) {
 func main() {
 	connectionParams := &kuda.ConnectionParams{
 		Email:       "seekersoftec@gmail.com", // "test@example.com",
-		ApiKey:      "ZAVRrek5uQEf0XtvmaBY",   //"api-key", ZAVRrek5uQEf0XtvmaBY
+		ApiKey:      "6bD9FeXrKMZq4zndfuU1",   //"api-key",
 		Live:        false,
 		ShowRequest: false,
 		ShowHeader:  false,
@@ -85,14 +85,14 @@ func main() {
 	// fmt.Println(token)
 
 	// Name Enquiry
-	// beneficiaryAccountNumber := 2611457591
-	// beneficiaryBankCode := 999057
+	beneficiaryAccountNumber := "2611457591"
+	beneficiaryBankCode := "999057"
 
-	// name, err := k.NameEnquiry(beneficiaryAccountNumber, beneficiaryBankCode, "", "")
-	// if err != nil {
-	// 	log.Fatalf("Errof: %s ", err)
-	// }
-	// fmt.Println(name)
+	name, err := k.NameEnquiry(beneficiaryAccountNumber, beneficiaryBankCode, "", "")
+	if err != nil {
+		log.Fatalf("Errof: %s ", err)
+	}
+	fmt.Println("NameEnquiry => ", name)
 
 	// list of banks
 	// banks, err := k.BankList()
@@ -107,30 +107,31 @@ func main() {
 	*/
 
 	users := make(map[int]FakeData)
-	count := 2
+	count := 1
 	for i := 0; i < count; i++ {
 		fdata, err := generateFakeData()
 		if err != nil {
 			log.Fatalf("Errof: %s ", err)
 		}
+		fdata.TrackingReference = k.GetRef(10)
 		fmt.Println(fdata)
 
 		// Create a Virtual Accounts
-		trackingRef := strconv.Itoa(k.GetRef(10))
+		trackingRef := strconv.Itoa(fdata.TrackingReference)
 		data, err := k.CreateVirtualAccount(fdata.FirstName, fdata.LastName, fdata.MiddleName, fdata.Email, fdata.PhoneNumber, fdata.BusinessName, trackingRef)
 		if err != nil {
 			log.Fatalf("Errof: %s ", err)
 		}
 
-		if data["message"] == "Request successful." && data["status"] == true {
+		if strings.Contains(data["message"].(string), "Request successful.") && data["status"] == true {
 			response := data["data"].(map[string]interface{})
 			fmt.Println(response["accountNumber"])
-			//
 			// store users
 			fdata.AccountNumber = response["accountNumber"].(string)
 			users[i] = fdata
+		} else {
+			fmt.Println(data)
 		}
-		//
 		// users[i] = fdata
 	}
 	//
@@ -138,19 +139,20 @@ func main() {
 	//
 	// SingleFundTransfer
 	// Set test parameters
-	user1 := users[0]
-	user2 := users[1]
-	trackingRef := user1.Email // user2.TrackingReference
-	beneficiaryAccountNumber := user2.AccountNumber
+	// user1 := users[0]
+	user2 := users[0]
+	fmt.Println(user2)
+	trackingRef := "5518871192" // strconv.Itoa(user2.TrackingReference) // user2.TrackingReference
+	beneficiaryAccountNumber = user2.AccountNumber
 	// beneficiaryAccountNumber, err := strconv.Atoi(user2.AccountNumber)
 	// if err != nil {
-	// 	// handle error
+	// handle error
 	// 	log.Fatalf("Errof: %s ", err)
 	// }
-	beneficiaryBankCode := "999057"
+	beneficiaryBankCode = "999057"
 	beneficiaryName := user2.FirstName + " " + user2.LastName
 	amount := 500
-	senderName := "John Doe"
+	senderName := "Kuda User"
 	narration := "Test transfer"
 	ClientAccountNumber := "2012017027"
 	// ClientAccountNumber, err := strconv.Atoi("2012017027") // 3000662179, 2012017027, user1.AccountNumber
@@ -159,18 +161,25 @@ func main() {
 	// log.Fatalf("Errof: %s ", err)
 	// }
 	nameEnquirySessionID := ""
-	//
+
+	// SingleFundTransfer
 	data, err := k.SingleFundTransfer(trackingRef, beneficiaryAccountNumber, beneficiaryBankCode, beneficiaryName, amount, senderName, narration, ClientAccountNumber, nameEnquirySessionID)
 	if err != nil {
 		log.Fatalf("Errof: %s ", err)
 	}
-	fmt.Println(data)
+	fmt.Println("SingleFundTransfer => ", data)
 
 	// Virtual Fund Transfer
 	data, err = k.VirtualFundTransfer(trackingRef, beneficiaryAccountNumber, beneficiaryBankCode, beneficiaryName, senderName, nameEnquirySessionID, amount, narration)
 	if err != nil {
 		log.Fatalf("Errof: %s ", err)
 	}
-	fmt.Println(data)
+	fmt.Println("VirtualFundTransfer => ", data)
 
+	// Withdraw Fund to main account
+	data, err = k.WithdrawVirtualAccount(trackingRef, amount, narration)
+	if err != nil {
+		log.Fatalf("Errof: %s ", err)
+	}
+	fmt.Println("WithdrawVirtualAccount => ", data)
 }
